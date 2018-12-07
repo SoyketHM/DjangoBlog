@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block stylesheet %}
+<style type="text/css">
+	#fh5co-offcanvas {
+width: auto;
+}
+#fh5co-offcanvas .fh5co-menu, #fh5co-offcanvas .fh5co-bio {
+width: auto;
+padding: 50px;
+}
+</style>
+{% endblock %}
+{% block profile %}
+<div class="fh5co-bio">
+	<figure>
+		<img src="{{ auth.profile_picture.url }}" alt="Free HTML5 Bootstrap Template" class="img-responsive">
+	</figure>
+	<h3 class="heading">About Me</h3>
+	<h2>{{ auth.name.get_full_name}}</h2>
+	<h4>{{ auth.name.email }}</h4>
+	<p>{{ auth.details }}</p>
+	<ul class="fh5co-social">
+		<li><a href="#"><i class="icon-twitter"></i></a></li>
+		<li><a href="#"><i class="icon-facebook"></i></a></li>
+		<li><a href="#"><i class="icon-instagram"></i></a></li>
+	</ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<h3 class="container">Author: {{ auth.name.get_full_name }}</h3><br>
+
+{% for post in posts %}
+<article class="col-lg-3 col-md-3 col-sm-3 col-xs-6 col-xxs-12 animate-box">
+	<figure>
+		<a href="{% url 'single_post' id=post.id %}"><img src="{{ post.image.url }}" alt="Image" class="img-responsive"></a>
+	</figure>
+	<span class="fh5co-meta"><a href="{% url 'category' name=post.category.name %}">{{ post.category }}</a></span>
+	<h2 class="fh5co-article-title"><a href="{% url 'single_post' id=post.id %}">{{ post.title }}</a></h2>
+	<span class="fh5co-meta"><a href="{% url 'author' name=post.article_author.name.username %}">{{ post.article_author.name.get_full_name }}</a></span>
+	<span class="fh5co-meta fh5co-date">{{ post.posted_on }}</span>
+</article>
+<div class="clearfix visible-xs-block"></div>
+{% endfor %}
+	<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-2">
+					<div class="pagination">
+						<span class="step-links">
+							{% if posts.has_previous %}
+							<a href="?page=1">&laquo; first</a> | 
+							<a href="?page={{ posts.previous_page_number }}">previous&nbsp;</a>
+						{% endif %}
+						
+						<span class="current">
+							Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+						</span>
+						
+						{% if posts.has_next %}
+						<a href="?page={{ posts.next_page_number }}">&nbsp;next</a> | 
+						<a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+						{% endif %}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}{% endblock %}
